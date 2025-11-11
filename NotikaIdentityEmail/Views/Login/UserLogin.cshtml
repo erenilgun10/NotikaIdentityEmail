@@ -1,4 +1,4 @@
-﻿@model RegisterViewModel
+﻿@model UserLoginViewModel
 @{
     Layout = null;
 }
@@ -37,20 +37,20 @@
 	<div class="limiter">
 		<div class="container-login100" style="background-image: url('/Login_v4/images/bg-01.jpg');">
 			<div class="wrap-login100 p-l-55 p-r-55 p-t-65 p-b-54">
-				<form class="login100-form validate-form">
+				<form class="login100-form validate-form" method="post">
 					<span class="login100-form-title p-b-49">
 						Notika
 					</span>
 
 					<div class="wrap-input100 validate-input m-b-23">
 						<span class="label-input100">Kullanıcı Adı</span>
-						<input class="input100" type="text" placeholder="Kullanıcı Adınızı Giriniz.">
+						<input class="input100" type="text" asp-for="Username" placeholder=" Kullanıcı Adınızı Giriniz.">
 						<span class="focus-input100" data-symbol="&#xf206;"></span>
 					</div>
 
 					<div class="wrap-input100 validate-input" >
 						<span class="label-input100">Şifre</span>
-						<input class="input100" type="password" placeholder="Şifrenizi Giriniz.">
+						<input class="input100" type="password"  asp-for="Password"  placeholder="Şifrenizi Giriniz.">
 						<span class="focus-input100" data-symbol="&#xf190;"></span>
 					</div>
 
@@ -59,6 +59,8 @@
                             Şifreni mi Unuttun?
 						</a>
 					</div>
+
+					<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
 					<div class="container-login100-form-btn">
 						<div class="wrap-login100-form-btn">
@@ -94,7 +96,7 @@
 							Bir hesabın yok mu?
 						</span>
 
-						<a href="#" class="txt2">
+						<a href="../Views/Register/CreateUser.cshtml" class="txt2">
                             Kayıt Ol
 						</a>
 					</div>
