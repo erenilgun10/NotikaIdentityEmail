@@ -1,0 +1,22 @@
+﻿
+<!doctype html>
+<html class="no-js" lang="">
+
+@await Component.InvokeAsync("HeaderUserLayout")
+
+<body>
+    @await Component.InvokeAsync("TopBarUserLayout")
+
+    @await Component.InvokeAsync("MobileMenuUserLayout")
+
+    @await Component.InvokeAsync("NavbarUserLayout")
+
+    @await Component.InvokeAsync("BreadCompUserLayout")
+
+    @RenderBody()
+
+    @await Component.InvokeAsync("FooterUserLayout")
+
+</body>
+
+</html>
