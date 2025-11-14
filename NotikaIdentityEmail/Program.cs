@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using NotikaIdentityEmail.Context;
 using NotikaIdentityEmail.Entities;
 using NotikaIdentityEmail.Models;
+using NotikaIdentityEmail.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<EmailContext>(options => options.UseSqlServer("Server=LPTNET2116;Initial Catalog=NotikaEmailDb;Integrated Security=True;TrustServerCertificate=True;"));
@@ -10,7 +11,7 @@ builder.Services.AddDbContext<EmailContext>(options => options.UseSqlServer("Ser
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<EmailContext>();
 builder.Services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<EmailContext>().AddErrorDescriber<CustomIdentityValidator>(); // AddEntityFrameworkStores -> Her şeyi db'de tutacağım, hangi veritabanında tutayım? 
-
+builder.Services.AddScoped<IEmailService,EmailService>();
 
 var app = builder.Build();
 
@@ -31,7 +32,7 @@ app.MapStaticAssets();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Login}/{action=UserLogin}/{id?}")
+    pattern: "{controller=Register}/{action=CreateUser}/{id?}")
     .WithStaticAssets();
 
 
