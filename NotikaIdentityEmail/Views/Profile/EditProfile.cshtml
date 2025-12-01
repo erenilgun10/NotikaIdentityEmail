@@ -1,4 +1,5 @@
-﻿@{
+﻿@model UserEditViewModel
+@{
     ViewData["Title"] = "Edit Profile";
     Layout = "~/Views/UserLayout/Index.cshtml";
 }
@@ -10,35 +11,49 @@
                 <div class="form-element-list">
                     <div class="basic-tb-hd">
                         <h2>Profilini Düzenle</h2>
-                        <p>Lütfen bilgilerinizi eksiksiz olarak doldurunuz.</p>
+                        <p>Bilgilerinizi eksiksiz olarak doldurunuz.</p>
                     </div>
                     <form action="/" method="post">
                         <div class="row">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="form-group">
                                     <div class="nk-int-st">
-                                        <input type="text" class="form-control" placeholder="Adınız">
+                                        <input type="text" class="form-control" asp-for="FirstName" placeholder="Adınız">
                                     </div>
                                 </div>
                             </div>
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="form-group">
                                     <div class="nk-int-st">
-                                        <input type="text" class="form-control" placeholder="Soyadınız">
+                                        <input type="text" class="form-control" asp-for="LastName" placeholder="Soyadınız">
                                     </div>
                                 </div>
                             </div>
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="form-group">
                                     <div class="nk-int-st">
-                                        <input type="text" class="form-control" placeholder="Şehiriniz">
+                                        <input type="text" class="form-control" asp-for="City" placeholder="Şehiriniz">
                                     </div>
                                 </div>
                             </div>
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="form-group">
                                     <div class="nk-int-st">
-                                        <input type="text" class="form-control" placeholder="Fotoğraf URL bilgisi">
+                                        <input type="text" class="form-control" asp-for="ImageUrl" placeholder="Fotoğraf URL bilgisi">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <div class="nk-int-st">
+                                        <input type="text" class="form-control" asp-for="PhoneNumber" placeholder="Telefon Numarası">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <div class="nk-int-st">
+                                        <input type="text" class="form-control" asp-for="Password" placeholder="Password">
                                     </div>
                                 </div>
                             </div>
