@@ -31,6 +31,9 @@ public class ActivationController(EmailContext context) : Controller
         var code = _context.Users.Where(x => x.Email == email).Select(x => x.ActivationCode).FirstOrDefault();
         if (activateCode == code)
         {
+            var cnt = _context.Users.Where(x => x.Email == email).FirstOrDefault();
+            cnt.EmailConfirmed = true;
+            _context.SaveChanges();
             return RedirectToAction("UserLogin", "Login");
         }
 
