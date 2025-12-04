@@ -1,7 +1,7 @@
-﻿@model List<Message>
+﻿@model List<MessageWithReceiverInfoViewModel>
 
 @{
-    ViewData["Title"] = "Sentbox";
+    ViewData["Title"] = "Inbox";
     Layout = "~/Views/UserLayout/Index.cshtml";
 }
 
@@ -16,13 +16,13 @@
                 <div class="inbox-text-list sm-res-mg-t-30">
                     <div class="form-group">
                         <div class="nk-int-st search-input search-overt">
-                            <input type="text" class="form-control" placeholder="Email ara..." />
-                            <button class="btn search-ib">Ara</button>
+                            <input type="text" class="form-control" placeholder="Aranacak kelimeleri giriniz..." />
+                            <button class="btn search-ib">Search</button>
                         </div>
                     </div>
                     <div class="inbox-btn-st-ls btn-toolbar">
                         <div class="btn-group ib-btn-gp active-hook nk-email-inbox">
-                            <button class="btn btn-default btn-sm"><i class="notika-icon notika-refresh"></i> Refresh</button>
+                            <button class="btn btn-default btn-sm"><i class="notika-icon notika-refresh"></i> Yenile</button>
                             <button class="btn btn-default btn-sm"><i class="notika-icon notika-next"></i></button>
                             <button class="btn btn-default btn-sm"><i class="notika-icon notika-down-arrow"></i></button>
                             <button class="btn btn-default btn-sm"><i class="notika-icon notika-trash"></i></button>
@@ -36,18 +36,25 @@
                     </div>
                     <div class="table-responsive">
                         <table class="table table-hover table-inbox">
+                            <tr>
+                                <th>#</th>
+                                <th>Gönderici</th>
+                                <th>Konu</th>
+                                <th>Kategori</th>
+                                <th>Gönderim Tarihi</th>
+
+                            </tr>
+
                             <tbody>
                                 @foreach (var item in Model)
                                 {
 
                                     <tr>
-                                        <td class="">
-                                            <label><input type="checkbox" class="i-checks"></label>
-                                        </td>
-                                        <td><a href="#">Alıcı</a> <span class="label label-warning">@item.CategoryId</span></td>
-                                        <td><a href="#"><strong> Konu: @item.Subject </strong> @item.MessageDetail.Substring(0, 20)</a></td>
-                                        <td></td>
-                                        <td class="text-right mail-date">@item.SendDate.ToShortDateString()</td>
+                                        <td class=""><label><input type="checkbox" class="i-checks"></label></td>
+                                        <td><a href="/Message/MessageDetail/@item.MessageId"> @item.ReceiverFirstName @item.ReceiverLastName </a> </td>
+                                        <td><a href="#"> @item.Subject </a></td>
+                                        <td> <span class="@item.CategoryLabelFormat"> @item?.CategoryName </span> </td>
+                                        <td class="text-right mail-date">@item?.SendDate.ToString("dd MMMM yyyy") </td>
                                     </tr>
 
                                 }

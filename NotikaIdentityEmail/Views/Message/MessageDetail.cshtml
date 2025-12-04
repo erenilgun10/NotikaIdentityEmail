@@ -2,6 +2,29 @@
 @{
     ViewData["Title"] = "Message Detail";
     Layout = "~/Views/UserLayout/Index.cshtml";
+
+    var now = DateTime.Now;
+    var sendDate = Model.SendDate;
+
+    var diff = now - sendDate;
+
+    if (diff < TimeSpan.Zero)
+    {
+        diff = TimeSpan.Zero; // gelecekteyse eksi göstermesin
+    }
+
+    var days = diff.Days;     // kaç tam gün
+    var hours = diff.Hours;   // gün düştükten sonra kalan saat
+    string timeAgo;
+
+    if (days >= 1)
+    {
+        timeAgo = $"{days} gün {hours} saat önce";
+    }
+    else
+    {
+        timeAgo = $"{(int)diff.TotalHours} saat önce";
+    }
 }
 
 <div class="inbox-area">
@@ -17,7 +40,7 @@
                             <h2>Mesaj Detayları</h2>
                         </div>
                         <div class="view-ml-rl">
-                            <p>08:26 PM (2 saat önce)</p>
+                            <p>(@Model.SendDate.ToString("dd.MM.yyyy" ) - @timeAgo)</p>
                         </div>
                     </div>
                     <div class="mail-ads mail-vw-ph">
@@ -26,7 +49,7 @@
                         <p class="last-ph"><b>Tarih:</b> @Model.SendDate</p>
                     </div>
                     <div class="view-mail-atn">
-                        <p> @Model.MessageDetail </p>
+                        <p> @Html.Raw(@Model.MessageDetail)</p>
                     </div>
                     <div class="vw-ml-action-ls text-right mg-t-20">
                         <div class="btn-group ib-btn-gp active-hook nk-email-inbox">

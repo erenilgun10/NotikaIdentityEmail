@@ -17,6 +17,9 @@
 
     @await Component.InvokeAsync("FooterUserLayout")
 
+
+    @await RenderSectionAsync("Scripts", required: false)
+
 </body>
 
 </html>

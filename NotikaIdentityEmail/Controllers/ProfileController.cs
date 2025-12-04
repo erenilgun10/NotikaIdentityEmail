@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AspNetCoreGeneratedDocument;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using NotikaIdentityEmail.Context;
 using NotikaIdentityEmail.Entities;
@@ -28,12 +29,12 @@ namespace NotikaIdentityEmail.Controllers
 
             var model = new UserEditViewModel
             {
-                UserName = user.UserName ?? "NULL",
+                UserName = user.UserName,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                City = user.City ?? "NULL",
-                PhoneNumber = user.PhoneNumber ?? "NULL",
-                ImageUrl = user.ImageUrl ?? "NULL",
+                City = user.City,
+                PhoneNumber = user.PhoneNumber,
+                ImageUrl = user.ImageUrl,
             };
             return View(model);
         }
@@ -45,47 +46,49 @@ namespace NotikaIdentityEmail.Controllers
         [HttpPost]
         public async Task<IActionResult> EditProfile(UserEditViewModel model)
         {
-            var Usr = await userManager.FindByNameAsync(model.UserName);
-            if (Usr == null)
+            if ((model.Password != null && model.PasswordConfirm != null) && (model.Password != model.PasswordConfirm))
             {
-                ModelState.AddModelError("", "User not found");
+                ModelState.AddModelError("", "Passwords do not match");
                 return View(model);
             }
-
-            Usr.FirstName = model.FirstName != null && model.FirstName != Usr.FirstName ? model.FirstName : Usr.FirstName;
-            Usr.LastName = model.LastName != null && model.LastName != Usr.LastName ? model.LastName : Usr.LastName;
-            Usr.City = model.City != null && model.City != Usr.City ? model.City : Usr.City;
-            Usr.PhoneNumber = model.PhoneNumber != null && model.PhoneNumber != Usr.PhoneNumber ? model.PhoneNumber : Usr.PhoneNumber;
-            Usr.ImageUrl = model.ImageUrl != null && model.ImageUrl != Usr.ImageUrl ? model.ImageUrl : Usr.ImageUrl;
-            if (!string.IsNullOrEmpty(model.Password))
+            if (!string.IsNullOrEmpty(model.UserName))
             {
-                var token = await userManager.GeneratePasswordResetTokenAsync(Usr);
-                var result = await userManager.ResetPasswordAsync(Usr, token, model.Password);
-                if (!result.Succeeded)
+                var Usr = await userManager.FindByNameAsync(model.UserName);
+
+                if (Usr == null)
                 {
-                    foreach (var item in result.Errors)
+                    ModelState.AddModelError("", "User not found");
+                    return View(model);
+                }
+
+                Usr.UserName = model.UserName;
+                Usr.FirstName = model.FirstName ?? Usr.FirstName;
+                Usr.LastName = model.LastName ?? Usr.LastName;
+                Usr.City = model.City;
+                Usr.PhoneNumber = model.PhoneNumber;
+                Usr.ImageUrl = model.ImageUrl;
+                Usr.Email = model.Email;
+
+                if (!string.IsNullOrEmpty(model.Password))
+                {
+                    Usr.PasswordHash = userManager.PasswordHasher.HashPassword(Usr, model.Password);
+                }
+
+                var updateResult = await userManager.UpdateAsync(Usr);
+                if (updateResult.Succeeded)
+                {
+                    return View();
+                }
+                else
+                {
+                    foreach (var item in updateResult.Errors)
                     {
                         ModelState.AddModelError("", item.Description);
                     }
-                    return View(model);
                 }
             }
-            var updateResult = await userManager.UpdateAsync(Usr);
-            if (updateResult.Succeeded)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-            else
-            {
-                foreach (var item in updateResult.Errors)
-                {
-                    ModelState.AddModelError("", item.Description);
-                }
                 return View(model);
-            }
-
         }
-
 
 
 

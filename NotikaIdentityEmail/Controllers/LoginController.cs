@@ -28,16 +28,24 @@ namespace NotikaIdentityEmail.Controllers
                 ModelState.AddModelError("", "Kullanıcı Adı yada Şifre Yanlış");
                 return View(model);
             }
-
-            if (usr.EmailConfirmed)
+            else if (usr.EmailConfirmed)
             {
                 var result = await signInManager.PasswordSignInAsync(model.Username, model.Password, true, true);
-                if (result.Succeeded) return RedirectToAction("Profile", "EditProfile");
+                if (result.Succeeded) return RedirectToAction("EditProfile","Profile");
                 else ModelState.AddModelError("", "Kullanıcı Adı yada Şifre Yanlış");
 
             }
-            else ModelState.AddModelError("", "Kullanıcı Adı Henüz Onaylı Değildir. Onaylayınız.");
-
+            else
+            {
+                var result = await signInManager.PasswordSignInAsync(model.Username, model.Password, true, true);
+                if (result.IsLockedOut)
+                {
+                    ModelState.AddModelError("", "Giriş Bilgileriniz yanlıştır.");
+                    return View();
+                }
+                ModelState.AddModelError("", "Kullanıcı Adı Henüz Onaylı Değildir. Onaylayınız.");
+                return RedirectToAction("UserActivation", "Activation");
+            }
 
             return View(model);
 
