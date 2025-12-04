@@ -6,6 +6,7 @@ namespace NotikaIdentityEmail.Entities
         public int CategoryId { get; set; }
         public string CategoryName { get; set; }
         public string CategoryIconUrl { get; set; }
+        public string CategoryLabelFormat { get; set; }
         public bool CategoryStatus { get; set; }
     }
 }

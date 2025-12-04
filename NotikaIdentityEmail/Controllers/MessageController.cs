@@ -1,29 +1,98 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using NotikaIdentityEmail.Context;
+using NotikaIdentityEmail.Entities;
 using NotikaIdentityEmail.Models;
 
 namespace NotikaIdentityEmail.Controllers
 {
-    public class MessageController(EmailContext context) : Controller
+    public class MessageController(EmailContext context, UserManager<AppUser> _userManager) : Controller
     {
-        private readonly EmailContext _context = context;
-
-
-        public IActionResult Inbox()
+        public async Task<IActionResult> Inbox(int? categoryId)
         {
-            var resp = _context.Messages.Where(x => x.ReceiverEmail == "49@email.com").ToList();
+            var userName = User?.Identity?.Name;
+            if (string.IsNullOrEmpty(userName))
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var user = await _userManager.FindByNameAsync(userName);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            //var resp = context.Messages.Where(x => x.ReceiverEmail == user.Email).ToList();
+
+            var resp = (from msg in context.Messages
+                        join ctg in context.Categories on msg.CategoryId equals ctg.CategoryId
+                        join usr in context.Users on msg.SenderEmail equals usr.Email into SenderGroup
+                        from usr in SenderGroup.DefaultIfEmpty()
+                        where msg.ReceiverEmail == user.Email
+                        select new MessageWithSenderInfoViewModel
+                        {
+                            MessageId = msg.MessageId,
+                            CategoryId = ctg.CategoryId,
+                            Subject = msg.Subject,
+                            MessageDetail = msg.MessageDetail,
+                            SenderEmail = msg.SenderEmail,
+                            SendDate = msg.SendDate,
+                            SenderFirstName = usr.FirstName ?? "Kullanıcı Bilinmiyor",
+                            SenderLastName = usr.LastName ?? "",
+                            CategoryName = ctg.CategoryName ?? "Kategori Yok",
+                            CategoryLabelFormat = ctg.CategoryLabelFormat,
+                        }).ToList();
+
+            if (categoryId != null)
+            {
+                resp = [.. resp.Where(x => x.CategoryId == categoryId)];
+            }
+
             return View(resp);
         }
 
-        public IActionResult Sentbox()
+        public async Task<IActionResult> Sentbox()
         {
-            var resp = _context.Messages.Where(x => x.SenderEmail == "49@email.com").ToList();
+            var userName = User?.Identity?.Name;
+            if (string.IsNullOrEmpty(userName))
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var user = await _userManager.FindByNameAsync(userName);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            //var resp = context.Messages.Where(x => x.ReceiverEmail == user.Email).ToList();
+
+            var resp = (from msg in context.Messages
+                        join ctg in context.Categories on msg.CategoryId equals ctg.CategoryId
+                        join usr in context.Users on msg.SenderEmail equals usr.Email into ReceiverGroup
+                        from usr in ReceiverGroup.DefaultIfEmpty()
+                        where msg.SenderEmail == user.Email
+
+                        select new MessageWithReceiverInfoViewModel
+                        {
+                            MessageId = msg.MessageId,
+                            Subject = msg.Subject,
+                            MessageDetail = msg.MessageDetail,
+                            ReceiverEmail = msg.SenderEmail,
+                            SendDate = msg.SendDate,
+                            ReceiverFirstName = usr.FirstName ?? "Kullanıcı Bilinmiyor",
+                            ReceiverLastName = usr.LastName ?? "",
+                            CategoryName = ctg.CategoryName ?? "Kategori Yok",
+                            CategoryLabelFormat = ctg.CategoryLabelFormat
+                        }).ToList();
             return View(resp);
         }
 
-        public IActionResult MessageDetail()
+        public IActionResult MessageDetail(int id)
         {
-            var resp = _context.Messages.Where(x => x.MessageId == 1).FirstOrDefault();
+            var resp = context.Messages.Where(x => x.MessageId == id).FirstOrDefault();
+            if (resp == null) return NotFound();
             return View(resp);
         }
 
@@ -31,15 +100,38 @@ namespace NotikaIdentityEmail.Controllers
         [HttpGet]
         public IActionResult NewMessage()
         {
+            var categories = context.Categories.ToList();
+            ViewBag.v = categories.Select(x => new SelectListItem
+            {
+                Text = x.CategoryName,
+                Value = x.CategoryId.ToString()
+            }).ToList();
             return View();
         }
 
-        //Yeni Mesaj Gönderme İşlemi
         [HttpPost]
-        public IActionResult CreateMessage()
+        public async Task<IActionResult> NewMessage(Message message)
         {
-            return View();
+            var userName = User?.Identity?.Name;
+            if (string.IsNullOrEmpty(userName))
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var user = await _userManager.FindByNameAsync(userName);
+            if (user == null || string.IsNullOrEmpty(user.Email))
+            {
+                return NotFound();
+            }
+
+            message.SendDate = DateTime.Now;
+            message.IsRead = false;
+            message.SenderEmail = user.Email!;
+            context.Messages.Add(message);
+            context.SaveChanges();
+            return RedirectToAction("Sentbox");
         }
+
 
 
 
