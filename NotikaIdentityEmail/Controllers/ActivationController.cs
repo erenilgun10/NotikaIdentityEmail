@@ -21,7 +21,6 @@ public class ActivationController(EmailContext context) : Controller
     [HttpPost]
     public IActionResult UserActivation(int activateCode)
     {
-
         string? email = TempData["EmailKey"] as string;
         if (string.IsNullOrEmpty(email))
         {
@@ -32,9 +31,14 @@ public class ActivationController(EmailContext context) : Controller
         if (activateCode == code)
         {
             var cnt = _context.Users.Where(x => x.Email == email).FirstOrDefault();
-            cnt.EmailConfirmed = true;
-            _context.SaveChanges();
-            return RedirectToAction("UserLogin", "Login");
+            if (cnt != null)
+            {
+                cnt.EmailConfirmed = true;
+                _context.SaveChanges();
+                return RedirectToAction("UserLogin", "Login");
+            }
+            ModelState.AddModelError("", "Kullanıcı bulunamadı.");
+            return View();
         }
 
         ModelState.AddModelError("", "Aktivasyon kodu hatalı.");
