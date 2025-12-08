@@ -32,7 +32,6 @@ namespace NotikaIdentityEmail.Controllers
                     new Claim("Username", simpleUserViewModel.Username),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 };
-            var test = jwtSettings.Value.SecretKey;
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Value.SecretKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
