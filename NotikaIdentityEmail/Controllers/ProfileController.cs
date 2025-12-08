@@ -1,4 +1,5 @@
 ﻿using AspNetCoreGeneratedDocument;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using NotikaIdentityEmail.Context;
@@ -7,12 +8,16 @@ using NotikaIdentityEmail.Models.IdentityModels;
 
 namespace NotikaIdentityEmail.Controllers
 {
+    [Authorize]
     public class ProfileController(UserManager<AppUser> userManager) : Controller
     {
 
 
         public async Task<IActionResult> EditProfile()
         {
+            //var isAuth = User?.Identity?.IsAuthenticated;
+            //var name = User?.Identity?.Name;
+            //var claims = User?.Claims?.ToList();
             var userName = User?.Identity?.Name;
             if (string.IsNullOrEmpty(userName))
             {

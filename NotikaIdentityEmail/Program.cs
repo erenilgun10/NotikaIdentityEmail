@@ -19,7 +19,8 @@ builder.Services.AddControllersWithViews();
 builder.Services
     .AddIdentity<AppUser, IdentityRole>()
     .AddEntityFrameworkStores<EmailContext>()
-    .AddErrorDescriber<CustomIdentityValidator>();
+    .AddErrorDescriber<CustomIdentityValidator>()
+    .AddTokenProvider<DataProtectorTokenProvider<AppUser>>(TokenOptions.DefaultProvider);
 
 builder.Services.AddScoped<IEmailService, EmailService>();
 
@@ -31,16 +32,12 @@ var jwtSettings = jwtSection.Get<JwtSettingsModel>();
 
 if (jwtSettings == null || string.IsNullOrWhiteSpace(jwtSettings.SecretKey))
 {
-    throw new InvalidOperationException("Jwt ayarları (özellikle SecretKey) düzgün yapılandırılmamış. appsettings.json dosyasını kontrol edin.");
+    throw new InvalidOperationException("Jwt ayarları düzgün yapılandırılmamış.");
 }
 
 builder.Services
-    .AddAuthentication(options =>
-    {
-        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    })
-    .AddJwtBearer(options =>
+    .AddAuthentication()
+    .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
@@ -56,13 +53,16 @@ builder.Services
         };
     });
 
+#endregion
+
 builder.Services.AddAuthorization();
 
-#endregion
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+app.UseStatusCodePagesWithRedirects("/Error/{0}");
+
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -74,6 +74,7 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
 
 app.MapStaticAssets();
 

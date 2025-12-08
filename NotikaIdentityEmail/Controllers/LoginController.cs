@@ -31,7 +31,7 @@ namespace NotikaIdentityEmail.Controllers
             else if (usr.EmailConfirmed)
             {
                 var result = await signInManager.PasswordSignInAsync(model.Username, model.Password, true, true);
-                if (result.Succeeded) return RedirectToAction("EditProfile","Profile");
+                if (result.Succeeded) return RedirectToAction("EditProfile", "Profile");
                 else ModelState.AddModelError("", "Kullanıcı Adı yada Şifre Yanlış");
 
             }
@@ -48,7 +48,6 @@ namespace NotikaIdentityEmail.Controllers
             }
 
             return View(model);
-
         }
 
 
