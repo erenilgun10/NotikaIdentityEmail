@@ -1,4 +1,5 @@
 ﻿using MailKit.Net.Smtp;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -13,6 +14,7 @@ using System.Threading.Tasks;
 
 namespace NotikaIdentityEmail.Controllers
 {
+    [Authorize]
     public class RoleController(RoleManager<IdentityRole> roleManager, UserManager<AppUser> userManager, EmailContext context) : Controller
     {
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using NotikaIdentityEmail.Context;
@@ -8,6 +9,7 @@ using NotikaIdentityEmail.Models.MessageViewModels;
 
 namespace NotikaIdentityEmail.Controllers
 {
+    [Authorize]
     public class MessageController(EmailContext context, UserManager<AppUser> _userManager) : Controller
     {
         public async Task<IActionResult> Inbox(int? categoryId)
@@ -23,8 +25,6 @@ namespace NotikaIdentityEmail.Controllers
             {
                 return NotFound();
             }
-
-            //var resp = context.Messages.Where(x => x.ReceiverEmail == user.Email).ToList();
 
             var resp = (from msg in context.Messages
                         join ctg in context.Categories on msg.CategoryId equals ctg.CategoryId

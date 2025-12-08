@@ -1,0 +1,21 @@
+﻿@{
+    ViewData["Title"] = "403 - HATA - NOTİKA";
+    Layout = null;
+}
+@await Component.InvokeAsync("HeaderUserLayout")
+
+<body>
+    <div class="error-page-area">
+        <div class="error-page-wrap">
+            <i class="notika-icon notika-close"></i>
+            <h2>HATA <span class="counter">403</span></h2>
+            <p>Bu sayfaya erişim yetkiniz yok rollerinizi denetleyin.</p>
+            <a href="/Message/Inbox" class="btn">Anasayfa</a>
+            <a href="/Role/RoleList" class="btn error-btn-mg">Rol Listesi</a>
+        </div>
+    </div>
+
+</body>
+@await Component.InvokeAsync("FooterUserLayout")
+
+@* </html> *@

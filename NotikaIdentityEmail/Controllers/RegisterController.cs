@@ -10,11 +10,6 @@ namespace NotikaIdentityEmail.Controllers
 {
     public class RegisterController(UserManager<AppUser> userManager, IEmailService emailService) : Controller
     {
-        private readonly UserManager<AppUser> _userManager = userManager;
-        private readonly IEmailService _emailService = emailService;
-
-
-
 
         [HttpGet]
         public IActionResult CreateUser()
@@ -36,10 +31,10 @@ namespace NotikaIdentityEmail.Controllers
                 ActivationCode = rnd.Next(100000, 1000000),
             };
 
-            var result = await _userManager.CreateAsync(appUser, model.Password);
+            var result = await userManager.CreateAsync(appUser, model.Password);
             if (result.Succeeded)
             {
-                await _emailService.SendActivationMailAsync(appUser);
+                await emailService.SendActivationMailAsync(appUser);
                 TempData["EmailKey"] = model.Email;
                 return RedirectToAction("UserActivation", "Activation");
             }
