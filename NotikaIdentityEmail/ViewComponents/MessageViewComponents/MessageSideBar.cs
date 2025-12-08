@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using NotikaIdentityEmail.Context;
 using NotikaIdentityEmail.Entities;
 using NotikaIdentityEmail.Models;
+using NotikaIdentityEmail.Models.IdentityModels;
 
 namespace NotikaIdentityEmail.ViewComponents.MessageViewComponents
 {

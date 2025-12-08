@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using MimeKit;
 using NotikaIdentityEmail.Context;
 using NotikaIdentityEmail.Entities;
-using NotikaIdentityEmail.Models;
+using NotikaIdentityEmail.Models.IdentityModels;
 using NotikaIdentityEmail.Services;
 using System;
 using System.Threading.Tasks;
