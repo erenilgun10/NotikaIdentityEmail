@@ -1,0 +1,65 @@
+﻿@model List<Notification>
+@if (Model == null || !Model.Any())
+{
+    <span>Mesaj yok</span>
+}
+else
+{
+    <li class="nav-item dropdown">
+        <a href="#" data-toggle="dropdown" role="button" aria-expanded="false" class="nav-link dropdown-toggle"><span><i class="notika-icon notika-mail"></i></span><div class="spinner4 spinner-4"></div><div class="ntd-ctn"><span>@ViewBag.NotificationCount</span></div></a>
+        <div role="menu" class="dropdown-menu message-dd animated zoomIn">
+            <div class="hd-mg-tt">
+                <h2> Bildirim </h2>
+            </div>
+            <div class="hd-message-info">
+                @foreach (var item in Model)
+                {
+                    <a href="javascript:void(0);" onclick="showNotificationDetail('@Html.Raw(item?.Detail?.Replace("'", "\\'").Replace("\n", " ").Replace("\r", " "))', '@item?.ImageUrl')">
+                        <div class="hd-message-sn">
+                            <div class="hd-message-img chat-img">
+                                <img src="@item?.ImageUrl" alt="" />
+                            </div>
+                            <div class="hd-mg-ctn">
+                                <h3><strong>System</strong></h3>
+                                <p>@Html.Raw(@item?.Detail)</p>
+                            </div>
+                        </div>
+                    </a>
+                }
+            </div>
+            <div class="hd-mg-va">
+                <a href="/Notification/Notificationlist/">Tümünü Gör</a>
+            </div>
+        </div>
+    </li>
+
+    <div class="modal fade" id="notificationModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Bildirim Detayı</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center mb-3">
+                        <img id="notificationImage" src="" alt="" style="max-width: 100px; border-radius: 50%;" />
+                    </div>
+                    <div id="notificationDetail"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showNotificationDetail(detail, imageUrl) {
+            document.getElementById('notificationDetail').innerHTML = detail;
+            document.getElementById('notificationImage').src = imageUrl;
+            $('#notificationModal').modal('show');
+        }
+    </script>
+}
