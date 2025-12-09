@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NotikaIdentityEmail.Context;
 using NotikaIdentityEmail.Entities;
+using NotikaIdentityEmail.Models.MessageViewModels;
 namespace NotikaIdentityEmail.ViewComponents
 {
     public class TopBarMessageList(EmailContext context, UserManager<AppUser> userManager) : ViewComponent
@@ -18,10 +19,22 @@ namespace NotikaIdentityEmail.ViewComponents
             if (user == null || string.IsNullOrEmpty(user.Email))
                 return View(0);
 
-            var messages = await context.Messages.Where(x => x.ReceiverEmail == user.Email &&  x.IsRead == false).ToListAsync();
-            return View(messages);
+            var unreadCount = await context.Messages.CountAsync(x => x.ReceiverEmail == user.Email && !x.IsRead);
+
+            List<MessageWithUserPhotosViewModel> model = await (
+                from m in context.Messages
+                join u in context.Users on m.SenderEmail equals u.Email
+                where m.ReceiverEmail == user.Email && m.IsRead == false
+                select new MessageWithUserPhotosViewModel
+                {
+                    FullName = u.FirstName + " " + u.LastName,
+                    Message = m,
+                    ImageUrl = u.ImageUrl
+                }
+            ).ToListAsync();
+            return View(model);
         }
 
-        
+
     }
 }

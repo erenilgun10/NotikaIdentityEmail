@@ -26,24 +26,27 @@ namespace NotikaIdentityEmail.Controllers
         public async Task<IActionResult> ForgetPassword(ForgetPasswordViewModel model)
         {
             bool isSent = false;
-
-            var user = await userManager.FindByEmailAsync(model.Email);
-            if (user != null)
+            if (model.Email != null)
             {
-                var token = await userManager.GeneratePasswordResetTokenAsync(user);
-                var passwordResetLink = Url.Action("ResetPassword", "PasswordChange", new { userId = user.Id, token }, Request.Scheme);
-                Console.WriteLine($"Şifre değiştirme Linki: {passwordResetLink}");
-                ViewBag.Message = "Şifre değiştirmek için gerekli link mail adresinize yollanmıştır.";
 
-                if (passwordResetLink != null)
-                    isSent = await emailService.SendPasswordResetMailAsync(user, passwordResetLink);
+                var user = await userManager.FindByEmailAsync(model.Email);
+                if (user != null)
+                {
+                    var token = await userManager.GeneratePasswordResetTokenAsync(user);
+                    var passwordResetLink = Url.Action("ResetPassword", "PasswordChange", new { userId = user.Id, token }, Request.Scheme);
+                    Console.WriteLine($"Şifre değiştirme Linki: {passwordResetLink}");
+                    ViewBag.Message = "Şifre değiştirmek için gerekli link mail adresinize yollanmıştır.";
 
-                if (isSent)
-                    return RedirectToAction("UserLogin", "Login");
-            }
-            else
-            {
-                ModelState.AddModelError(string.Empty, "Kullanıcı Bulunamadı.");
+                    if (passwordResetLink != null)
+                        isSent = await emailService.SendPasswordResetMailAsync(user, passwordResetLink);
+
+                    if (isSent)
+                        return RedirectToAction("UserLogin", "Login");
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Kullanıcı Bulunamadı.");
+                }
             }
             return RedirectToAction("UserLogin", "Login");
         }
@@ -74,12 +77,11 @@ namespace NotikaIdentityEmail.Controllers
                 ModelState.AddModelError(string.Empty, "Kullanıcı bulunamadı.");
                 return View(model);
             }
-            if(model.Password != model.ConfirmPassword)
+            if (string.IsNullOrEmpty(model.Password) || model.Password != model.ConfirmPassword)
             {
-                ModelState.AddModelError(string.Empty, "Şifreler birbirleriyle uyuşmamaktadır.");
+                ModelState.AddModelError(string.Empty, "Şifreler birbirleriyle uyuşmamaktadır veya boş.");
                 return View(model);
             }
-
 
             var result = await userManager.ResetPasswordAsync(user, token, model.Password);
             if (result.Succeeded)
@@ -87,6 +89,7 @@ namespace NotikaIdentityEmail.Controllers
                 ViewBag.Message = "Şifreniz başarıyla değiştirildi.";
                 return RedirectToAction("UserLogin", "Login");
             }
+
             return View(model);
         }
 
