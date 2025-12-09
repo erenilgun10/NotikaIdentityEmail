@@ -1,35 +1,38 @@
-﻿@model List<Message>
-
-
-
-<li class="nav-item dropdown">
-    <a href="#" data-toggle="dropdown" role="button" aria-expanded="false" class="nav-link dropdown-toggle"><span><i class="notika-icon notika-mail"></i></span></a>
-    <div role="menu" class="dropdown-menu message-dd animated zoomIn">
-        <div class="hd-mg-tt">
-            <h2>Mesajlar</h2>
-        </div>
-        <div class="hd-message-info">
-
-            @foreach (var item in Model)
-            {
-                <a href="/Message/MessageDetail/@item.MessageId">
-                    <div class="hd-message-sn">
-                        <div class="hd-message-img">
-                            <img src="/userimages/01.jpg/" alt="" />
+﻿@using NotikaIdentityEmail.Models.MessageViewModels
+@model List<MessageWithUserPhotosViewModel>
+@if (Model == null || !Model.Any())
+{
+    <span>Mesaj yok</span>
+}
+else
+{
+    <li class="nav-item dropdown">
+        <a href="#" data-toggle="dropdown" role="button" aria-expanded="false" class="nav-link dropdown-toggle"><span><i class="notika-icon notika-mail"></i></span><div class="spinner4 spinner-4"></div><div class="ntd-ctn"><span>@Model.Count</span></div></a>
+        <div role="menu" class="dropdown-menu message-dd animated zoomIn">
+            <div class="hd-mg-tt">
+                <h2>Mesajlar</h2>
+            </div>
+            <div class="hd-message-info">
+                @foreach (var item in Model)
+                {
+                    <a href="/Message/MessageDetail/@item.Message?.MessageId">
+                        <div class="hd-message-sn">
+                            <div class="hd-message-img">
+                                <img src="@item.ImageUrl" alt="" />
+                            </div>
+                            <div class="hd-mg-ctn">
+                                <h3>@item.FullName</h3>
+                                <p>@Html.Raw(item.Message?.MessageDetail)</p>
+                            </div>
                         </div>
-                        <div class="hd-mg-ctn">
-                            <h3>@item.SenderEmail</h3>
-                            <p>@Html.Raw(item?.MessageDetail)</p>
-                        </div>
-                    </div>
-                </a>
-            }
-
+                    </a>
+                }
+            </div>
+            <div class="hd-mg-va">
+                <a href="/Message/Inbox/">Tümünü Gör</a>
+            </div>
         </div>
-        <div class="hd-mg-va">
-            <a href="/Message/Inbox/">Tümünü Gör</a>
-        </div>
-    </div>
-</li>
+    </li>
+}
 
-<img src="c:\users\eren.ilgun\desktop\projects\notikaidentityemail\notikaidentityemail\wwwroot\userimages\01.jpg" />
+
