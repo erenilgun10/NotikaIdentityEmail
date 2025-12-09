@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using NotikaIdentityEmail.Context;
 using NotikaIdentityEmail.Entities;
 using NotikaIdentityEmail.Models.MessageViewModels;
-namespace NotikaIdentityEmail.ViewComponents
+namespace NotikaIdentityEmail.ViewComponents.TopBarViewComponents
 {
     public class TopBarMessageList(EmailContext context, UserManager<AppUser> userManager) : ViewComponent
     {
@@ -19,7 +19,7 @@ namespace NotikaIdentityEmail.ViewComponents
             if (user == null || string.IsNullOrEmpty(user.Email))
                 return View(0);
 
-            var unreadCount = await context.Messages.CountAsync(x => x.ReceiverEmail == user.Email && !x.IsRead);
+            //var unreadCount = await context.Messages.CountAsync(x => x.ReceiverEmail == user.Email && !x.IsRead);
 
             List<MessageWithUserPhotosViewModel> model = await (
                 from m in context.Messages

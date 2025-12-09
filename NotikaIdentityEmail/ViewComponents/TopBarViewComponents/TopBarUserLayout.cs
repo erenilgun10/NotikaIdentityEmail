@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace NotikaIdentityEmail.ViewComponents
+namespace NotikaIdentityEmail.ViewComponents.TopBarViewComponents
 {
     public class TopBarUserLayout() : ViewComponent
     {

@@ -201,12 +201,22 @@ body {}
     text-decoration: none;
     background-color: #00c292;
 }
-.navbar-nav>li>a{
+/*.navbar-nav>li>a{
 	color:#fff;
 	padding: 20px 0px 20px 30px;
+}*/
+.navbar-nav > li > a {
+    color: #fff;
+    padding: 20px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
-.rtl-layout .navbar-nav>li>a{
-	padding: 20px 30px 20px 0px;
+/*.rtl-layout .navbar-nav>li>a{
+	padding: 20px 20px;
+}*/
+.rtl-layout .navbar-nav > li > a {
+    padding: 20px 20px;
 }
 .nav.navbar-nav.notika-top-nav li a{
 	font-size:20px;
@@ -364,7 +374,7 @@ body {}
     position: relative;
 }
 
-.ntd-ctn {
+/*.ntd-ctn {
     position: absolute;
     top: 10px;
     left: 50px;
@@ -377,9 +387,26 @@ body {}
     border-radius: 50%;
     z-index: 999;
     color: #fff;
-}
+}*/
 
-/* Pulse efekti container */
+.ntd-ctn {
+    position: absolute;
+    top: 50%;
+    left: 50px;
+    transform: translate(-50%, -50%);
+    margin-top: -12px;
+    margin-left: 8px;
+    font-size: 10px;
+    background: #e46a76;
+    height: 18px;
+    width: 18px;
+    line-height: 18px;
+    text-align: center;
+    border-radius: 50%;
+    z-index: 999;
+    color: #fff;
+}
+/*
 .spinner4 {
     width: 18px;
     height: 18px;
@@ -388,6 +415,20 @@ body {}
     display: inline-block;
     top: 10px;
     left: 50px;
+    z-index: 998;
+}
+*/
+.spinner4 {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    position: absolute;
+    display: inline-block;
+    top: 50%;
+    left: 50px;
+    transform: translate(-50%, -50%);
+    margin-top: -12px;
+    margin-left: 8px;
     z-index: 998;
 }
 
