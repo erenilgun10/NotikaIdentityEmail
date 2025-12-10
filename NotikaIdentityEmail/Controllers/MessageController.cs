@@ -12,7 +12,7 @@ namespace NotikaIdentityEmail.Controllers
     [Authorize]
     public class MessageController(EmailContext context, UserManager<AppUser> _userManager) : Controller
     {
-        public async Task<IActionResult> Inbox(int? categoryId)
+        public async Task<IActionResult> Inbox(int? id)
         {
             var userName = User?.Identity?.Name;
             if (string.IsNullOrEmpty(userName))
@@ -45,9 +45,9 @@ namespace NotikaIdentityEmail.Controllers
                             CategoryLabelFormat = ctg.CategoryLabelFormat,
                         }).ToList();
 
-            if (categoryId != null)
+            if (id != null)
             {
-                resp = [.. resp.Where(x => x.CategoryId == categoryId)];
+                resp = [.. resp.Where(x => x.CategoryId == id)];
             }
 
             return View(resp);

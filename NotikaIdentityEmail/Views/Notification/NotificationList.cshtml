@@ -5,311 +5,252 @@
     var counter = 0;
 }
 
-<style>
-    /* Modern Modal Overlay */
-    .notification-modal-overlay {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.6);
-        backdrop-filter: blur(5px);
-        z-index: 9999;
-        animation: fadeIn 0.3s ease;
-    }
-
-        .notification-modal-overlay.active {
-            display: flex;
-            justify-content: center;
-            align-items: center;
+<div class="notification-center">
+    <style>
+        .notification-center .notification-modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(4px);
+            z-index: 99999;
         }
 
-    /* Modern Modal Container */
-    .notification-modal-container {
-        background: white;
-        border-radius: 20px;
-        max-width: 700px;
-        width: 90%;
-        max-height: 90vh;
-        overflow: hidden;
-        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
-        animation: slideUp 0.4s ease;
-        position: relative;
-    }
-
-    /* Modal Header */
-    .notification-modal-header {
-        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-        padding: 30px;
-        color: white;
-        position: relative;
-    }
-
-    .notification-modal-close {
-        position: absolute;
-        top: 15px;
-        right: 15px;
-        background: rgba(255, 255, 255, 0.2);
-        border: none;
-        color: white;
-        font-size: 28px;
-        width: 45px;
-        height: 45px;
-        border-radius: 50%;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-        .notification-modal-close:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: rotate(90deg);
-        }
-
-    .notification-modal-title {
-        font-size: 24px;
-        font-weight: 700;
-        margin: 0;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-    }
-
-        .notification-modal-title i {
-            font-size: 28px;
-        }
-
-    /* Modal Body */
-    .notification-modal-body {
-        padding: 35px;
-        max-height: 60vh;
-        overflow-y: auto;
-    }
-
-    .notification-image-wrapper {
-        text-align: center;
-        margin-bottom: 25px;
-    }
-
-        .notification-image-wrapper img {
-            width: 140px;
-            height: 140px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 5px solid #f3f4f6;
-            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.3);
-            transition: transform 0.3s ease;
-        }
-
-            .notification-image-wrapper img:hover {
-                transform: scale(1.05);
+            .notification-center .notification-modal-overlay.active {
+                display: flex;
+                justify-content: center;
+                align-items: center;
             }
 
-    .notification-subject-box {
-        background: linear-gradient(135deg, #f0f9ff 0%, #e0e7ff 100%);
-        padding: 20px;
-        border-radius: 12px;
-        margin-bottom: 20px;
-        border-left: 5px solid #6366f1;
-    }
+        .notification-center .notification-modal-container {
+            width: min(520px, calc(100% - 32px));
+            background: #fff;
+            border-radius: 18px;
+            padding: 28px 28px 32px;
+            box-shadow: 0 25px 60px rgba(15, 23, 42, 0.35);
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
 
-        .notification-subject-box h3 {
-            margin: 0;
-            font-size: 22px;
-            color: #1e293b;
-            font-weight: 700;
+        .notification-center .notification-modal-header {
             display: flex;
             align-items: center;
-            gap: 10px;
+            justify-content: space-between;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e2e8f0;
+            color: #0f172a;
         }
 
-        .notification-subject-box i {
-            color: #6366f1;
-            font-size: 20px;
+        .notification-center .notification-modal-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin: 0;
         }
 
-    .notification-detail-box {
-        background: #f8fafc;
-        padding: 25px;
-        border-radius: 12px;
-        line-height: 1.8;
-        color: #475569;
-        font-size: 16px;
-    }
-
-    /* Scrollbar Styling */
-    .notification-modal-body::-webkit-scrollbar {
-        width: 8px;
-    }
-
-    .notification-modal-body::-webkit-scrollbar-track {
-        background: #f1f5f9;
-        border-radius: 10px;
-    }
-
-    .notification-modal-body::-webkit-scrollbar-thumb {
-        background: #cbd5e1;
-        border-radius: 10px;
-    }
-
-        .notification-modal-body::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
+        .notification-center .notification-modal-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            background: #f1f5f9;
+            color: #0f172a;
+            font-size: 1.25rem;
+            cursor: pointer;
+            transition: background 0.2s ease;
         }
 
-    /* Animations */
-    @@keyframes fadeIn {
-        from {
-            opacity: 0;
+            .notification-center .notification-modal-close:hover {
+                background: #e2e8f0;
+            }
+
+        .notification-center .notification-modal-body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 18px;
+            max-height: 70vh;
+            overflow-y: auto;
         }
 
-        to {
-            opacity: 1;
-        }
-    }
-
-    @@keyframes slideUp {
-        from {
-            transform: translateY(50px);
-            opacity: 0;
-        }
-
-        to {
-            transform: translateY(0);
-            opacity: 1;
-        }
-    }
-
-    /* Responsive */
-    @@media (max-width: 768px) {
-        .notification-modal-container {
-            width: 95%;
-            max-height: 85vh;
+        .notification-center .notification-image {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #e2e8f0;
+            box-shadow: 0 8px 18px rgba(15, 23, 42, 0.15);
+            background: #f8fafc;
         }
 
-        .notification-modal-header {
+        .notification-center .notification-subject {
+            width: 100%;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin: 0;
+        }
+
+        .notification-center .notification-detail {
+            width: 100%;
+            text-align: left;
+            line-height: 1.7;
+            color: #475569;
+            font-size: 0.95rem;
+            border-radius: 12px;
+            background: #f8fafc;
             padding: 20px;
         }
 
-        .notification-modal-body {
-            padding: 20px;
+        @@media (max-width: 576px) {
+            .notification-center .notification-modal-container {
+                padding: 20px;
+                gap: 16px;
+            }
+
+            .notification-center .notification-image {
+                width: 110px;
+                height: 110px;
+            }
         }
+    </style>
 
-        .notification-modal-title {
-            font-size: 20px;
-        }
+    <div class="inbox-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                    <div class="inbox-text-list sm-res-mg-t-30">
+                        <div class="form-group">
+                        </div>
 
-        .notification-image-wrapper img {
-            width: 100px;
-            height: 100px;
-        }
-
-        .notification-subject-box h3 {
-            font-size: 18px;
-        }
-    }
-</style>
-
-<div class="inbox-area">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-                <div class="inbox-text-list sm-res-mg-t-30">
-                    <div class="form-group">
-                    </div>
-
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th style="width: 5%;">#</th>
-                                    <th style="width: 10%;">Resim</th>
-                                    <th style="width: 15%;">Gönderici</th>
-                                    <th style="width: 25%;">Konu</th>
-                                    <th style="width: 45%;">Detay</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model)
-                                {
-                                    counter++;
-                                    var detailText = item?.Detail ?? "";
-                                    var plainText = System.Text.RegularExpressions.Regex.Replace(detailText, "<.*?>", string.Empty);
-                                    var detailPreview = plainText.Length > 50
-                                    ? plainText.Substring(0, 50) + "..."
-                                    : plainText;
-
-                                    <tr onclick="showNotificationDetails(`@Html.Raw(item?.Detail?.Replace("`", "\\`"))`, '@item?.ImageUrl', `@Html.Raw(item?.Subject?.Replace("`", "\\`"))`)" style="cursor: pointer;">
-                                        <td>@counter</td>
-                                        <td><div class="hd-message-img chat-img"><img src="@item?.ImageUrl" alt="" style="width: 50px; height: 50px; object-fit: cover;" /></div></td>
-                                        <td>System</td>
-                                        <td style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">@item?.Subject</td>
-                                        <td style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">@detailPreview</td>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 5%;">#</th>
+                                        <th style="width: 10%;">Resim</th>
+                                        <th style="width: 15%;">Gönderici</th>
+                                        <th style="width: 25%;">Konu</th>
+                                        <th style="width: 45%;">Detay</th>
                                     </tr>
-                                }
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        counter++;
+                                        var detailText = item?.Detail ?? "";
+                                        var plainText = System.Text.RegularExpressions.Regex.Replace(detailText, "<.*?>", string.Empty);
+                                        var detailPreview = plainText.Length > 50
+                                        ? plainText.Substring(0, 50) + "..."
+                                        : plainText;
+
+                                        <tr class="notification-row" style="cursor: pointer;">
+                                            <td>@counter</td>
+                                            <td>
+                                                <div class="hd-message-img chat-img">
+                                                    <img src="@item?.ImageUrl"
+                                                         alt="Bildirim görseli"
+                                                         class="notification-thumbnail"
+                                                         style="width: 50px; height: 50px; object-fit: cover;" />
+                                                </div>
+                                            </td>
+                                            <td>System</td>
+                                            <td class="notification-subject-cell" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                                @item?.Subject
+                                            </td>
+                                            <td style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                                @detailPreview
+                                                <span class="notification-detail-source" hidden>
+                                                    @Html.Raw(item?.Detail ?? string.Empty)
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Modern Notification Modal -->
-<div class="notification-modal-overlay" id="notificationModalOverlay" onclick="closeNotificationModal(event)">
-    <div class="notification-modal-container" onclick="event.stopPropagation()">
-        <div class="notification-modal-header">
-            <h2 class="notification-modal-title">
-                <i class="fa fa-bell"></i>
-                Bildirim Detayı
-            </h2>
-            <button class="notification-modal-close" onclick="closeNotificationModal()">&times;</button>
-        </div>
-        <div class="notification-modal-body">
-            <div class="notification-image-wrapper">
-                <img id="notificationImage" src="" alt="Bildirim Görseli">
+    <div class="notification-modal-overlay" id="notificationModalOverlay">
+        <div class="notification-modal-container">
+            <div class="notification-modal-header">
+                <h2 class="notification-modal-title">Bildirim Detayı</h2>
+                <button type="button" class="notification-modal-close" data-close-modal>&times;</button>
             </div>
-            <div class="notification-subject-box">
-                <h3>
-                    <i class="fa fa-tag"></i>
-                    <span id="notificationSubject"></span>
-                </h3>
-            </div>
-            <div class="notification-detail-box" id="notificationDetail">
+            <div class="notification-modal-body">
+                <img id="notificationImage" class="notification-image" src="" alt="Bildirim Görseli">
+                <p id="notificationSubject" class="notification-subject"></p>
+                <div class="notification-detail" id="notificationDetail"></div>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    function showNotificationDetails(detail, imageUrl, subject) {
-        document.getElementById('notificationSubject').innerText = subject || 'Belirtilmemiş';
-        document.getElementById('notificationDetail').innerHTML = detail || 'Detay bulunmuyor.';
-        document.getElementById('notificationImage').src = imageUrl || '/images/default-notification.png';
+    document.addEventListener('DOMContentLoaded', () => {
+        const pageRoot = document.querySelector('.notification-center');
+        const overlay = pageRoot.querySelector('#notificationModalOverlay');
+        const subjectEl = pageRoot.querySelector('#notificationSubject');
+        const detailEl = pageRoot.querySelector('#notificationDetail');
+        const imageEl = pageRoot.querySelector('#notificationImage');
+        const defaultImage = '@Url.Content("~/images/default-notification.png")';
 
-        const overlay = document.getElementById('notificationModalOverlay');
-        overlay.classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
+        pageRoot.querySelectorAll('.notification-row').forEach(row => {
+            row.addEventListener('click', () => {
+                const detailSource = row.querySelector('.notification-detail-source');
+                const detailHtml = detailSource ? detailSource.innerHTML.trim() : '';
+                const thumbnail = row.querySelector('.notification-thumbnail');
+                const imageUrl = thumbnail ? thumbnail.getAttribute('src') : '';
+                const subjectCell = row.querySelector('.notification-subject-cell');
+                const subject = subjectCell ? subjectCell.textContent.trim() : '';
 
-    function closeNotificationModal(event) {
-        if (event && event.target.classList.contains('notification-modal-container')) {
-            return;
+                showNotificationDetails(detailHtml, imageUrl, subject);
+            });
+        });
+
+        overlay.addEventListener('click', evt => {
+            if (evt.target === overlay) {
+                closeNotificationModal();
+            }
+        });
+
+        pageRoot.querySelectorAll('[data-close-modal]').forEach(button => {
+            button.addEventListener('click', closeNotificationModal);
+        });
+
+        document.addEventListener('keydown', evt => {
+            if (evt.key === 'Escape' && overlay.classList.contains('active')) {
+                closeNotificationModal();
+            }
+        });
+
+        function showNotificationDetails(detail, imageUrl, subject) {
+            const subjectText = subject && subject.length > 0 ? subject : 'Belirtilmemiş';
+            const detailHtml = detail && detail.length > 0 ? detail : 'Detay bulunmuyor.';
+
+            subjectEl.textContent = subjectText;
+            detailEl.innerHTML = detailHtml;
+
+            const trimmedImage = imageUrl ? imageUrl.trim() : '';
+            imageEl.onerror = () => {
+                imageEl.onerror = null;
+                imageEl.src = defaultImage;
+            };
+            imageEl.src = trimmedImage.length > 0 ? trimmedImage : defaultImage;
+            imageEl.alt = `${subjectText} görseli`;
+
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
         }
 
-        const overlay = document.getElementById('notificationModalOverlay');
-        overlay.classList.remove('active');
-        document.body.style.overflow = 'auto';
-    }
-
-    // ESC tuşu ile kapatma
-    document.addEventListener('keydown', function(event) {
-        if (event.key === 'Escape') {
-            closeNotificationModal();
+        function closeNotificationModal() {
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
         }
     });
 </script>

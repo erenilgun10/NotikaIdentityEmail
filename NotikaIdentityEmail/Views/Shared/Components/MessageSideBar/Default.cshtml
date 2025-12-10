@@ -9,14 +9,14 @@
             <ul class="inbox-st-nav inbox-ft">
                 <li><a href="/Message/Inbox"><i class="notika-icon notika-mail"></i> Gelen Kutusu<span class="pull-right">@Model.InboxCount</span></a></li>
                 <li><a href="/Message/SentBox"><i class="notika-icon notika-sent"></i> Gönderilenler<span class="pull-right">@Model.SentBoxCount</span></a></li>
-                <li><a href="#"><i class="notika-icon notika-draft"></i> Taslaklar</a></li>
-                <li><a href="#"><i class="notika-icon notika-trash"></i> Silinenler</a></li>
+ @*                <li><a href="#"><i class="notika-icon notika-draft"></i> Taslaklar</a></li>
+                <li><a href="#"><i class="notika-icon notika-trash"></i> Silinenler</a></li> *@
             </ul>
         </div>
         <hr>
         @await Component.InvokeAsync("MessageCategoryListSideBar")
         <hr>
-        <div class="inbox-status">
+       @*  <div class="inbox-status">
             <ul class="inbox-st-nav inbox-nav-mg">
                 <li><a href="#"><i class="notika-icon notika-success"></i> Forum</a></li>
                 <li><a href="#"><i class="notika-icon notika-chat"></i> Chat</a></li>
@@ -24,6 +24,6 @@
                 <li><a href="#"><i class="notika-icon notika-settings"></i> Ayarlar</a></li>
                 <li><a href="#"><i class="notika-icon notika-support"></i> Destek</a></li>
             </ul>
-        </div>
+        </div> *@
     </div>
 </div>

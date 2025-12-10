@@ -3,63 +3,92 @@
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <ul class="nav nav-tabs notika-menu-wrap menu-it-icon-pro">
-                   @*  <li>
-                        <a data-toggle="tab" href="/Home/Index"><i class="notika-icon notika-house"></i> Anasayfa</a>
-                    </li> *@
                     <li class="active">
-                        <a data-toggle="tab" href=""><i class="notika-icon notika-mail"></i> Email</a>
+                        <a data-toggle="tab" href="#Home"><i class="notika-icon notika-house"></i> Anasayfa</a>
                     </li>
                     <li>
-                        <a data-toggle="tab" href="/Profile/EditProfile"><i class="notika-icon notika-edit"></i> Profil</a>
-                    </li>
-@*                     <li>
-                        <a data-toggle="tab" href="#Charts"><i class="notika-icon notika-bar-chart"></i> Ayarlar</a>
+                        <a data-toggle="tab" href="#Mail"><i class="notika-icon notika-edit"></i> Email</a>
                     </li>
                     <li>
-                        <a data-toggle="tab" href="#Tables"><i class="notika-icon notika-windows"></i> Kullanıcılar</a>
-                    </li> *@
+                        <a data-toggle="tab" href="#Profiles"><i class="notika-icon notika-edit"></i> Profil</a>
+                    </li>
+                    <li>
+                        <a data-toggle="tab" href="#Users"><i class="notika-icon notika-edit"></i> Kullanıcılar</a>
+                    </li>
+                    <li>
+                        <a data-toggle="tab" href="#Roles"><i class="notika-icon notika-edit"></i> Roller</a>
+                    </li>
+                    <li>
+                        <a data-toggle="tab" href="#Settings"><i class="notika-icon notika-edit"></i> Ayarlar</a>
+                    </li>
                 </ul>
                 <div class="tab-content custom-menu-content">
-                    <div id="Home" class="tab-pane in notika-tab-menu-bg animated flipInX">
+                    <div id="Home" class="tab-pane active notika-tab-menu-bg animated flipInX">
                         <ul class="notika-main-menu-dropdown">
                             <li>
-                                <a href="/Message/Inbox">Dashboard One</a>
+                                <a href="/Message/Inbox">Anasayfa</a>
                             </li>
-                        
-                        </ul>
-                    </div>
-                    <div id="mailbox" class="tab-pane active notika-tab-menu-bg animated flipInX">
-                        <ul class="notika-main-menu-dropdown">
                             <li>
-                                <a href="/Profile/EditProfile">Profile</a>
+                                <a href="/Message/Inbox">İstatislikler</a>
                             </li>
 
                         </ul>
                     </div>
-                    <div id="Interface" class="tab-pane notika-tab-menu-bg animated flipInX">
+                    <div id="Mail" class="tab-pane notika-tab-menu-bg animated flipInX">
                         <ul class="notika-main-menu-dropdown">
                             <li>
-                                <a href="/Messages/Inbox">Animations</a>
+                                <a href="/Profile/EditProfile">Gelen Kutusu</a>
+                            </li>
+                            <li>
+                                <a href="/Profile/EditProfile">Giden Kutusu</a>
+                            </li>
+                            <li>
+                                <a href="/Profile/EditProfile">Yeni Mesaj Oluştur</a>
                             </li>
 
                         </ul>
                     </div>
-                    @* <div id="Charts" class="tab-pane notika-tab-menu-bg animated flipInX">
+                    <div id="Profiles" class="tab-pane notika-tab-menu-bg animated flipInX">
                         <ul class="notika-main-menu-dropdown">
                             <li>
-                                <a href="flot-charts.html">Flot Charts</a>
+                                <a href="/Messages/SentBox">Profil</a>
+                            </li>
+                            <li>
+                                <a href="/Messages/SentBox">Şifre Yenileme</a>
+                            </li>
+
+                        </ul>
+                    </div>
+                    <div id="Users" class="tab-pane notika-tab-menu-bg animated flipInX">
+                        <ul class="notika-main-menu-dropdown">
+                            <li>
+                                <a href="/Messages/SentBox">Kullanıcı Listesi</a>
+                            </li>
+                            <li>
+                                <a href="/Messages/SentBox">Yeni Kullanıcı</a>
                             </li>
                         </ul>
                     </div>
-                    <div id="Tables" class="tab-pane notika-tab-menu-bg animated flipInX">
+                    <div id="Roles" class="tab-pane notika-tab-menu-bg animated flipInX">
                         <ul class="notika-main-menu-dropdown">
                             <li>
-                                <a href="normal-table.html">Normal Table</a>
+                                <a href="/Messages/SentBox">Rol Listesi</a>
                             </li>
-
+                            <li>
+                                <a href="/Messages/SentBox">Yeni Rol Atama</a>
+                            </li>
                         </ul>
-                    </div> *@
-
+                    </div>
+                    <div id="Settings" class="tab-pane notika-tab-menu-bg animated flipInX">
+                        <ul class="notika-main-menu-dropdown">
+                            <li>
+                                <a href="/Messages/SentBox">Sistem Ayarları </a>
+                            </li>
+                            <li>
+                                <a href="/Messages/SentBox">Çıkış Yap</a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
