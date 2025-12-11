@@ -1,4 +1,5 @@
-﻿using System;
+using NotikaIdentityEmail.Enum;
+using System;
 
 namespace NotikaIdentityEmail.Entities
 {
@@ -8,9 +9,8 @@ namespace NotikaIdentityEmail.Entities
         public required string AppUserId { get; set; }
         public string? CommentDetail { get; set; }
         public DateTime CommentDate { get; set; }
-        public string? CommentStatus { get; set; }
-
-        public AppUser AppUser { get; set; } = new();
+        public StatusEnum CommentStatus { get; set; }
+        public AppUser? AppUser { get; set; }
 
     }
 }
