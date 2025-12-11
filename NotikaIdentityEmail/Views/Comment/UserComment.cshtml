@@ -1,101 +1,289 @@
-﻿@using Microsoft.AspNetCore.Identity
-@model List<Comment>
+﻿@using System
+@model NotikaIdentityEmail.Models.CommentViewModels.CommentViewModel
 @{
-    ViewData["Title"] = "User Comments";
+    ViewData["Title"] = "Forum";
     Layout = "~/Views/UserLayout/Index.cshtml";
+    var totalPages = Model?.TotalPages ?? 0;
+    var pageNumber = Model?.PageNumber ?? 1;
+    var hasPrevious = Model?.HasPrevious ?? false;
+    var hasNext = Model?.HasNext ?? false;
+    var startPage = totalPages > 0 ? Math.Max(1, pageNumber - 2) : 0;
+    var endPage = totalPages > 0 ? Math.Min(totalPages, startPage + 4) : 0;
+    var previousPage = hasPrevious ? pageNumber - 1 : 1;
+    var nextPage = hasNext ? pageNumber + 1 : (totalPages == 0 ? 1 : totalPages);
 }
 
 <style>
     :root {
-        --forum-accent: #515ae2;
-        --forum-muted: #64748b;
+        --forum-primary: #c9a961;
+        --forum-text: #2c2c2c;
+        --forum-text-light: #6b6b6b;
+        --forum-border: #e5e5e5;
+        --forum-bg: #ffffff;
+        --forum-hover: #f8f8f8;
     }
 
-    .forum-board {
-        max-width: 820px;
+    .forum-container {
+        max-width: 1200px;
         margin: 0 auto;
+        padding: 2rem;
     }
 
     .forum-header {
-        border-bottom: 1px solid #e2e8f0;
-        padding-bottom: 1rem;
+        background: var(--forum-bg);
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border: 1px solid var(--forum-border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1.5rem;
     }
 
-    .forum-title {
-        letter-spacing: 0.02em;
+    .forum-title h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--forum-text);
+        margin: 0 0 0.5rem 0;
     }
 
-    .forum-chip {
-        min-width: 120px;
+    .forum-subtitle {
+        font-size: 1rem;
+        color: var(--forum-text-light);
+        margin: 0;
+    }
+
+    .forum-stats {
+        display: flex;
+        gap: 1.5rem;
+    }
+
+    .stat-box {
+        text-align: center;
+        padding: 1rem 1.5rem;
+        background: var(--forum-hover);
+        border-radius: 8px;
+        min-width: 100px;
+    }
+
+    .stat-label {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: var(--forum-text-light);
         font-weight: 600;
-        border: 1px solid rgba(81, 90, 226, 0.3);
-        color: var(--forum-accent);
-        background: rgba(81, 90, 226, 0.08);
+        margin-bottom: 0.25rem;
     }
 
-    .forum-card {
-        border-radius: 1rem;
-        border: 1px solid #eef2ff;
-        transition: transform 140ms ease, box-shadow 140ms ease;
+    .stat-value {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--forum-primary);
     }
 
-        .forum-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 1.25rem 2rem rgba(15, 23, 42, 0.12);
+    .comments-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .comment-card {
+        background: var(--forum-bg);
+        border: 1px solid var(--forum-border);
+        border-radius: 12px;
+        padding: 1.5rem;
+        transition: all 0.2s ease;
+    }
+
+        .comment-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border-color: var(--forum-primary);
         }
 
-    .forum-empty {
-        border: 1px dashed rgba(81, 90, 226, 0.4);
-        border-radius: 1.25rem;
-        background: rgba(81, 90, 226, 0.06);
+    .comment-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--forum-border);
     }
 
-    .forum-author {
-        color: #0f172a;
+    .comment-author {
+        font-weight: 600;
+        font-size: 1rem;
+        color: var(--forum-text);
     }
 
-    .forum-date {
-        color: var(--forum-muted);
+    .comment-date {
+        font-size: 0.875rem;
+        color: var(--forum-text-light);
+    }
+
+    .comment-body {
+        color: var(--forum-text);
+        line-height: 1.6;
+        font-size: 0.9375rem;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: var(--forum-bg);
+        border: 1px solid var(--forum-border);
+        border-radius: 12px;
+    }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            color: var(--forum-text);
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state p {
+            color: var(--forum-text-light);
+        }
+
+    .pagination-wrapper {
+        margin-top: 2rem;
+        display: flex;
+        justify-content: center;
+    }
+
+    .pagination {
+        display: flex;
+        gap: 0.5rem;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .page-item {
+        margin: 0;
+    }
+
+    .page-link {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 40px;
+        height: 40px;
+        padding: 0 0.75rem;
+        background: var(--forum-bg);
+        border: 1px solid var(--forum-border);
+        border-radius: 8px;
+        color: var(--forum-text);
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+        .page-link:hover {
+            background: var(--forum-primary);
+            border-color: var(--forum-primary);
+            color: white;
+        }
+
+    .page-item.active .page-link {
+        background: var(--forum-primary);
+        border-color: var(--forum-primary);
+        color: white;
+    }
+
+    .page-item.disabled .page-link {
+        opacity: 0.5;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+
+    @@media (max-width: 768px) {
+        .forum-container {
+            padding: 1rem;
+        }
+
+        .forum-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .forum-stats {
+            width: 100%;
+            justify-content: space-between;
+        }
+
+        .forum-title h1 {
+            font-size: 1.5rem;
+        }
     }
 </style>
 
-<section class="container py-5 forum-board">
-    <header class="forum-header d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
-        <div>
-            <p class="fs-3 fw-semibold text-dark mb-1 forum-title">Forum</p>
-            <p class="text-secondary mb-0">Minimalist topluluk sohbeti</p>
+<div class="forum-container">
+    <header class="forum-header">
+        <div class="forum-title">
+            <h1>Forum</h1>
+            <p class="forum-subtitle">Deneyimlerini paylaş, sorular sor ve topluluğumuzla büyü</p>
         </div>
-        <span class="badge rounded-pill forum-chip px-3 py-2">
-            @((Model?.Count) ?? 0) yorum
-        </span>
+        <div class="forum-stats">
+            <div class="stat-box">
+                <div class="stat-label">Toplam</div>
+                <div class="stat-value">@(Model?.CommentCount ?? 0)</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Sayfa</div>
+                <div class="stat-value">@pageNumber</div>
+            </div>
+        </div>
     </header>
 
-    @if (!(Model?.Any() ?? false))
+    @if (!(Model?.Comments?.Any() ?? false))
     {
-        <div class="forum-empty text-center p-5">
-            <h3 class="fw-semibold text-dark mb-2">Henüz yorum yok</h3>
-            <p class="text-secondary mb-0">İlk mesajını paylaşarak sohbeti başlat.</p>
+        <div class="empty-state">
+            <h3>Henüz yorum yok</h3>
+            <p>İlk yorumu sen yap ve sohbeti başlat!</p>
         </div>
     }
     else
     {
-        <div class="d-flex flex-column gap-3">
-            @foreach (var item in Model)
+        <div class="comments-list">
+            @foreach (var item in Model!.Comments)
             {
-                <article class="card forum-card shadow-sm">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-baseline flex-wrap gap-2 mb-2">
-                            <span class="fw-semibold forum-author">
-                                @item.AppUser.FirstName @item.AppUser.LastName
-                            </span>
-                            <span class="small forum-date">
-                                @item.CommentDate.ToString("dd MMM yyyy")
-                            </span>
-                        </div>
-                        <p class="mb-0 text-body-secondary">@item.CommentDetail</p>
+                <article class="comment-card">
+                    <div class="comment-header">
+                        <span class="comment-author">
+                            @item.AppUser?.FirstName @item.AppUser?.LastName
+                        </span>
+                        <span class="comment-date">
+                            @item.CommentDate.ToString("dd MMMM yyyy")
+                        </span>
+                    </div>
+                    <div class="comment-body">
+                        @item.CommentDetail
                     </div>
                 </article>
             }
         </div>
+
+        @if (totalPages > 1)
+        {
+            <div class="pagination-wrapper">
+                <ul class="pagination">
+                    <li class="page-item @(hasPrevious ? string.Empty : "disabled")">
+                        <a class="page-link" asp-action="UserComment" asp-route-page="@previousPage">‹</a>
+                    </li>
+
+                    @for (var pageIndex = startPage; pageIndex <= endPage; pageIndex++)
+                    {
+                        <li class="page-item @(pageIndex == pageNumber ? "active" : string.Empty)">
+                            <a class="page-link" asp-action="UserComment" asp-route-page="@pageIndex">@pageIndex</a>
+                        </li>
+                    }
+
+                    <li class="page-item @(hasNext ? string.Empty : "disabled")">
+                        <a class="page-link" asp-action="UserComment" asp-route-page="@nextPage">›</a>
+                    </li>
+                </ul>
+            </div>
+        }
     }
-</section>
+</div>
