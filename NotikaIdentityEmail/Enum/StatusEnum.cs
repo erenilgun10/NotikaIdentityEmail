@@ -2,8 +2,9 @@
 {
     public enum StatusEnum
     {
-        none = 0,
+        Waiting = 0,
         active = 1,
-        passive = 2
+        passive = 2,
+        Toxic = 3
     }
 }

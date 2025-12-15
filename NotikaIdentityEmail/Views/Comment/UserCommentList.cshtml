@@ -42,12 +42,18 @@
                                         <td>@item.CommentStatus</td>
 
                                         <td>
-                                            <a asp-controller="Comment"
-                                               asp-action="CommentDelete"
-                                               asp-route-id="@item.CommentId"
-                                               class="btn btn-danger btn-sm">
-                                                Sil
-                                            </a>
+                                            <form asp-controller="Comment"
+                                                  asp-action="DeleteComment"
+                                                  asp-route-id="@item.CommentId"
+                                                  method="post"
+                                                  onsubmit="return confirm('Silmek istediğine emin misin?');">
+
+                                                @Html.AntiForgeryToken()
+
+                                                <button type="submit" class="btn btn-danger btn-sm">
+                                                    Sil
+                                                </button>
+                                            </form>
                                         </td>
 
                                         <td>

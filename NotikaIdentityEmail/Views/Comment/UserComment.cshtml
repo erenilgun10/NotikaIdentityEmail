@@ -21,6 +21,7 @@
         --forum-border: #e5e5e5;
         --forum-bg: #ffffff;
         --forum-hover: #f8f8f8;
+        --error-color: #f44336;
     }
 
     .forum-container {
@@ -197,6 +198,127 @@
         pointer-events: none;
     }
 
+    /* Yorum Formu Stilleri */
+    .comment-form-section {
+        margin-top: 3rem;
+        background: var(--forum-bg);
+        border: 1px solid var(--forum-border);
+        border-radius: 12px;
+        padding: 2rem;
+    }
+
+    .form-header {
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid var(--forum-primary);
+    }
+
+        .form-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--forum-text);
+            margin: 0 0 0.5rem 0;
+        }
+
+        .form-header p {
+            font-size: 0.9375rem;
+            color: var(--forum-text-light);
+            margin: 0;
+        }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        display: block;
+        font-size: 0.9375rem;
+        font-weight: 600;
+        color: var(--forum-text);
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control-comment {
+        width: 100%;
+        min-height: 180px;
+        padding: 1rem;
+        border: 2px solid var(--forum-border);
+        border-radius: 8px;
+        font-size: 0.9375rem;
+        color: var(--forum-text);
+        font-family: inherit;
+        transition: all 0.2s ease;
+        resize: vertical;
+    }
+
+        .form-control-comment:focus {
+            outline: none;
+            border-color: var(--forum-primary);
+            box-shadow: 0 0 0 3px rgba(201, 169, 97, 0.1);
+        }
+
+        .form-control-comment::placeholder {
+            color: var(--forum-text-light);
+            opacity: 0.7;
+        }
+
+    .char-counter {
+        text-align: right;
+        font-size: 0.8125rem;
+        color: var(--forum-text-light);
+        margin-top: 0.5rem;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: flex-end;
+        margin-top: 1.5rem;
+    }
+
+    .btn-submit {
+        padding: 0.75rem 2rem;
+        border: none;
+        border-radius: 8px;
+        font-size: 0.9375rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        background: var(--forum-primary);
+        color: white;
+    }
+
+        .btn-submit:hover {
+            background: #b8985a;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(201, 169, 97, 0.3);
+        }
+
+    .alert-message {
+        padding: 1rem 1.25rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        font-size: 0.9375rem;
+    }
+
+    .alert-error {
+        background: #ffebee;
+        border-left: 4px solid var(--error-color);
+        color: #c62828;
+    }
+
+    .validation-summary ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .validation-summary li {
+        padding: 0.5rem 0;
+        color: var(--error-color);
+        font-size: 0.875rem;
+    }
+
     @@media (max-width: 768px) {
         .forum-container {
             padding: 1rem;
@@ -214,6 +336,14 @@
 
         .forum-title h1 {
             font-size: 1.5rem;
+        }
+
+        .comment-form-section {
+            padding: 1.5rem;
+        }
+
+        .form-header h2 {
+            font-size: 1.25rem;
         }
     }
 </style>
@@ -286,4 +416,68 @@
             </div>
         }
     }
+
+    <section class="comment-form-section">
+        <div class="form-header">
+            <h2>Yeni Yorum Yaz</h2>
+            <p>Fikrilerini ve düşüncelerini paylaşabilirsin.</p>
+        </div>
+
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="alert-message alert-error validation-summary">
+                <ul>
+                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        <li>@error.ErrorMessage</li>
+                    }
+                </ul>
+            </div>
+        }
+
+        <form asp-action="CreateComment" asp-controller="Comment" method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="form-group">
+                <label for="commentDetail" class="form-label">Yorumunuz</label>
+                <textarea id="commentDetail"
+                          name="Comment.CommentDetail"
+                          class="form-control-comment"
+                          placeholder="Yorumunuzu buraya yazın..."
+                          maxlength="1000"
+                          required></textarea>
+                <div class="char-counter">
+                    <span id="charCount">0</span> / 1000 karakter
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-submit">
+                    Yorumu Gönder
+                </button>
+            </div>
+        </form>
+    </section>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const textarea = document.getElementById('commentDetail');
+        const charCount = document.getElementById('charCount');
+
+        if (textarea && charCount) {
+            textarea.addEventListener('input', function () {
+                const count = this.value.length;
+                charCount.textContent = count;
+
+                if (count >= 950) {
+                    charCount.style.color = 'var(--error-color)';
+                } else if (count >= 800) {
+                    charCount.style.color = '#ff9800';
+                } else {
+                    charCount.style.color = 'var(--forum-text-light)';
+                }
+            });
+        }
+    });
+</script>

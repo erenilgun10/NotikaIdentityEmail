@@ -97,7 +97,6 @@ namespace NotikaIdentityEmail.Controllers
             return View(resp);
         }
 
-        //Yeni Mesaj Gönderme Ekranı
         [HttpGet]
         public IActionResult NewMessage()
         {

@@ -55,6 +55,14 @@ builder.Services
 
 #endregion
 
+
+
+builder.Services.AddAuthentication().AddGoogle(options =>
+{
+    options.ClientId = "";
+    options.ClientSecret = "";
+});
+
 builder.Services.AddAuthorization();
 
 

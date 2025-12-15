@@ -7,9 +7,11 @@ using NotikaIdentityEmail.Models.IdentityModels;
 
 namespace NotikaIdentityEmail.Controllers
 {
-    public class LoginController(SignInManager<AppUser> signInManager, EmailContext context) : Controller
+    public class LoginController(SignInManager<AppUser> signInManager, EmailContext context,UserManager<AppUser> userManager) : Controller
     {
-        private readonly EmailContext _context = context;
+        
+
+
 
         [HttpGet]
         public IActionResult UserLogin()
@@ -22,7 +24,7 @@ namespace NotikaIdentityEmail.Controllers
         [HttpPost]
         public async Task<IActionResult> UserLogin(UserLoginViewModel model)
         {
-            var usr = _context.Users.FirstOrDefault(u => u.UserName == model.Username);
+            var usr = context.Users.FirstOrDefault(u => u.UserName == model.Username);
             if (usr == null)
             {
                 ModelState.AddModelError("", "Kullanıcı Adı yada Şifre Yanlış");
@@ -49,6 +51,18 @@ namespace NotikaIdentityEmail.Controllers
 
             return View(model);
         }
+
+
+        [HttpPost]
+        public IActionResult ExternalLogin (string provider,string? returnUrl = null)
+        {
+            var redirectUrl = Url.Action("ExternalLoginCallback", "Login", new { ReturnUrl = returnUrl });
+            var properties = signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+            return new ChallengeResult(provider, properties);
+
+        }
+
+
 
 
     }
