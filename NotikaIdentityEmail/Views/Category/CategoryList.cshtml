@@ -1,0 +1,286 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model List<Category>
+@{
+    ViewData["Title"] = "Kategori Listesi";
+    Layout = "~/Views/UserLayout/Index.cshtml";
+    var count = 0;
+}
+
+<style>
+    .category-table-wrapper {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        margin: 20px 0;
+    }
+
+    .table-header {
+        background: #667eea;
+        color: white;
+        padding: 20px 25px;
+        border-bottom: 3px solid #5568d3;
+    }
+
+        .table-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .table-header p {
+            margin: 5px 0 0 0;
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+
+    .category-stats {
+        background: #f8f9fa;
+        padding: 15px 25px;
+        border-bottom: 1px solid #e9ecef;
+        font-size: 0.9rem;
+        color: #495057;
+    }
+
+        .category-stats strong {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+    .table-content {
+        padding: 25px;
+    }
+
+    .category-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .category-table thead {
+            background: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+            .category-table thead th {
+                padding: 12px 15px;
+                text-align: left;
+                font-weight: 600;
+                font-size: 0.85rem;
+                color: #495057;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+        .category-table tbody tr {
+            border-bottom: 1px solid #e9ecef;
+            transition: background-color 0.2s ease;
+        }
+
+            .category-table tbody tr:hover {
+                background-color: #f8f9ff;
+            }
+
+            .category-table tbody tr:last-child {
+                border-bottom: none;
+            }
+
+        .category-table tbody td {
+            padding: 15px;
+            color: #212529;
+            font-size: 0.95rem;
+        }
+
+    .row-number {
+        text-align: center;
+        font-weight: 600;
+        color: #667eea;
+        width: 60px;
+    }
+
+    .category-name {
+        font-weight: 500;
+        color: #2d3748;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .category-icon {
+        width: 30px;
+        height: 30px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #667eea;
+        color: white;
+        font-size: 1rem;
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .status-active {
+        background-color: #d4edda;
+        color: #155724;
+    }
+
+    .status-inactive {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 8px;
+        justify-content: flex-start;
+    }
+
+    .btn-action {
+        padding: 6px 14px;
+        border: none;
+        border-radius: 4px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        color: white;
+    }
+
+    .btn-edit {
+        background-color: #28a745;
+    }
+
+        .btn-edit:hover {
+            background-color: #218838;
+            color: white;
+        }
+
+    .btn-delete {
+        background-color: #dc3545;
+    }
+
+        .btn-delete:hover {
+            background-color: #c82333;
+            color: white;
+        }
+
+    .btn-create {
+        background-color: #667eea;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 6px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.2s ease;
+        margin-top: 15px;
+    }
+
+        .btn-create:hover {
+            background-color: #5568d3;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+        }
+
+    .label-preview {
+        font-family: monospace;
+        background: #f8f9fa;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        color: #6c757d;
+    }
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="category-table-wrapper">
+                <div class="table-header">
+                    <h2>📁 Kategori Listesi</h2>
+                    <p>Sistemdeki tüm kategorileri görüntüleyin, düzenleyin veya silin</p>
+                </div>
+
+                <div class="category-stats">
+                    <strong>Toplam Kategori:</strong> @Model.Count
+                </div>
+
+                <div class="table-content">
+                    <table class="category-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 60px; text-align: center;">#</th>
+                                <th>Kategori Adı</th>
+                                <th style="width: 150px;">İkon URL</th>
+                                <th style="width: 150px;">Label Format</th>
+                                <th style="width: 100px;">Durum</th>
+                                <th style="width: 200px;">İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                count++;
+                                <tr>
+                                    <td class="row-number">@count</td>
+                                    <td>
+                                        <div class="category-name">
+                                            @if (!string.IsNullOrEmpty(item.CategoryIconUrl))
+                                            {
+                                                <div class="category-icon">
+                                                    <i class="@item.CategoryIconUrl"></i>
+                                                </div>
+                                            }
+                                            <span>@item.CategoryName</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="label-preview">@(item.CategoryIconUrl ?? "-")</span>
+                                    </td>
+                                    <td>
+                                        <span class="label-preview">@(item.CategoryLabelFormat ?? "-")</span>
+                                    </td>
+                                    <td>
+                                        <span class="status-badge @(item.CategoryStatus ? "status-active" : "status-inactive")">
+                                            @(item.CategoryStatus ? "Aktif" : "Pasif")
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <a href="/Category/UpdateCategory/@item.CategoryId" class="btn-action btn-edit">
+                                                ✏️ Düzenle
+                                            </a>
+                                            <a href="/Category/DeleteCategory/@item.CategoryId"
+                                               class="btn-action btn-delete"
+                                               onclick="return confirm('Bu kategoriyi silmek istediğinize emin misiniz?')">
+                                                🗑️ Sil
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                    <a href="/Category/CreateCategory" class="btn-create">
+                        ➕ Yeni Kategori Oluştur
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

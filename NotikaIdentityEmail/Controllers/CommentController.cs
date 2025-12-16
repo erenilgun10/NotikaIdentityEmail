@@ -14,7 +14,7 @@ using System.Text.Json;
 
 namespace NotikaIdentityEmail.Controllers
 {
-    public class CommentController(EmailContext context, UserManager<AppUser> userManager) : Controller
+    public class CommentController(EmailContext context, UserManager<AppUser> userManager, IConfiguration config) : Controller
     {
 
         [HttpGet]
@@ -114,6 +114,8 @@ namespace NotikaIdentityEmail.Controllers
                     return NotFound();
                 }
 
+                
+
                 var comment = new Comment
                 {
                     AppUserId = user.Id,
@@ -123,6 +125,7 @@ namespace NotikaIdentityEmail.Controllers
 
                 using var client = new HttpClient();
                 var apiKey = "";
+                var apiKey = config["HuggingFace:ApiKey"];
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", apiKey);
                 try
                 {
@@ -132,7 +135,7 @@ namespace NotikaIdentityEmail.Controllers
                     };
                     var translateJson = JsonSerializer.Serialize(translateRBody);
                     var translateContent = new StringContent(translateJson, System.Text.Encoding.UTF8, "application/json");
-                    var translateResponse = await client.PostAsync("https://router.huggingface.co/hf-inference/models/Helsinki-NLP/opus-mt-tr-en", translateContent);
+                    var translateResponse = await client.PostAsync(config["HuggingFace:TranslateUrl"], translateContent);
                     var translateResponseString = await translateResponse.Content.ReadAsStringAsync();
                     string englishText = comment.CommentDetail ?? "";
                     if (translateResponseString.TrimStart().StartsWith("["))
@@ -146,13 +149,10 @@ namespace NotikaIdentityEmail.Controllers
                         inputs = englishText
                     };
 
-
-
-
                     var toxicJson = JsonSerializer.Serialize(toxicRequestBody);
 
                     var toxicContent = new StringContent(toxicJson, System.Text.Encoding.UTF8, "application/json");
-                    var toxicResponse = await client.PostAsync("https://router.huggingface.co/hf-inference/models/unitary/toxic-bert", toxicContent);
+                    var toxicResponse = await client.PostAsync(config["HuggingFace:ToxicUrl"], toxicContent);
                     var toxicResponseString = await toxicResponse.Content.ReadAsStringAsync();
                     if (toxicResponseString.TrimStart().StartsWith("["))
                     {

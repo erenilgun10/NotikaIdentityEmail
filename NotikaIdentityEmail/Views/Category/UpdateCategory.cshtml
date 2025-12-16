@@ -1,0 +1,302 @@
+﻿@using NotikaIdentityEmail.Models.IdentityModels
+@model Category
+@{
+    ViewData["Title"] = "Kategori Güncelle";
+    Layout = "~/Views/UserLayout/Index.cshtml";
+}
+
+<style>
+    .update-category-wrapper {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        margin: 20px 0;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .form-header {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        padding: 25px 30px;
+        border-bottom: 3px solid #218838;
+    }
+
+        .form-header h2 {
+            margin: 0 0 8px 0;
+            font-size: 1.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-header p {
+            margin: 0;
+            opacity: 0.95;
+            font-size: 0.95rem;
+        }
+
+    .form-body {
+        padding: 30px;
+    }
+
+    .form-section {
+        margin-bottom: 25px;
+    }
+
+        .form-section label {
+            display: block;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-section .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+            .form-section .form-control:focus {
+                border-color: #28a745;
+                outline: none;
+                box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+            }
+
+    .form-toggle {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+        .form-toggle input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .form-toggle label {
+            margin: 0;
+            cursor: pointer;
+            font-weight: 500;
+            text-transform: none;
+            letter-spacing: normal;
+        }
+
+    .form-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 2px solid #f8f9fa;
+    }
+
+    .btn-submit {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        padding: 12px 30px;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+        }
+
+    .btn-cancel {
+        background: #6c757d;
+        color: white;
+        padding: 12px 30px;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+        .btn-cancel:hover {
+            background: #5a6268;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+    .form-hint {
+        font-size: 0.85rem;
+        color: #6c757d;
+        margin-top: 5px;
+        display: block;
+    }
+
+    .icon-preview {
+        margin-top: 10px;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 6px;
+        display: none;
+    }
+
+        .icon-preview.show {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+    .icon-display {
+        width: 40px;
+        height: 40px;
+        background: #28a745;
+        color: white;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+    }
+
+    .info-badge {
+        background: #e7f3ff;
+        border-left: 4px solid #0066cc;
+        padding: 15px;
+        border-radius: 6px;
+        margin-bottom: 25px;
+    }
+
+        .info-badge strong {
+            color: #0066cc;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .info-badge p {
+            margin: 0;
+            color: #495057;
+            font-size: 0.9rem;
+        }
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="update-category-wrapper">
+                <div class="form-header">
+                    <h2>
+                        <span>✏️</span>
+                        <span>Kategori Güncelle</span>
+                    </h2>
+                    <p>Kategori bilgilerini güncelleyerek değişikliklerinizi kaydedin</p>
+                </div>
+
+                <div class="form-body">
+                    <div class="info-badge">
+                        <strong>ℹ️ Bilgi</strong>
+                        <p>Kategori ID: <strong>@Model.CategoryId</strong> - Bu kategoriyi düzenlemektesiniz</p>
+                    </div>
+
+                    <form method="post">
+                        <input asp-for="CategoryId" type="hidden" />
+
+                        <div class="form-section">
+                            <label for="CategoryName">Kategori Adı *</label>
+                            <input type="text"
+                                   class="form-control"
+                                   asp-for="CategoryName"
+                                   id="CategoryName"
+                                   placeholder="Kategori adını giriniz"
+                                   required>
+                            <span class="form-hint">Kategorinizin görüntüleneceği isim</span>
+                        </div>
+
+                        <div class="form-section">
+                            <label for="CategoryIconUrl">İkon URL / Class</label>
+                            <input type="text"
+                                   class="form-control"
+                                   asp-for="CategoryIconUrl"
+                                   id="CategoryIconUrl"
+                                   placeholder="Örn: fa fa-laptop, notika-icon notika-star"
+                                   oninput="updateIconPreview(this.value)"
+                                   value="@Model.CategoryIconUrl">
+                            <span class="form-hint">Font Awesome veya özel ikon class'ı (opsiyonel)</span>
+
+                            <div class="icon-preview @(string.IsNullOrEmpty(Model.CategoryIconUrl) ? "" : "show")" id="iconPreview">
+                                <div class="icon-display" id="iconDisplay">
+                                    @if (!string.IsNullOrEmpty(Model.CategoryIconUrl))
+                                    {
+                                        <i class="@Model.CategoryIconUrl"></i>
+                                    }
+                                </div>
+                                <span>İkon Önizleme</span>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <label for="CategoryLabelFormat">Label Format</label>
+                            <input type="text"
+                                   class="form-control"
+                                   asp-for="CategoryLabelFormat"
+                                   id="CategoryLabelFormat"
+                                   placeholder="Örn: badge-primary, label-success"
+                                   value="@Model.CategoryLabelFormat">
+                            <span class="form-hint">Kategori etiket stilini belirleyin (opsiyonel)</span>
+                        </div>
+
+                        <div class="form-section">
+                            <div class="form-toggle">
+                                <input type="checkbox"
+                                       asp-for="CategoryStatus"
+                                       id="CategoryStatus"
+                                       checked="@Model.CategoryStatus">
+                                <label for="CategoryStatus">Kategori Aktif</label>
+                            </div>
+                            <span class="form-hint">Pasif kategoriler kullanıcılar tarafından görüntülenemez</span>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn-submit">
+                                💾 Değişiklikleri Kaydet
+                            </button>
+                            <a href="/Category/CategoryList" class="btn-cancel">
+                                ❌ İptal
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function updateIconPreview(iconClass) {
+        const preview = document.getElementById('iconPreview');
+        const display = document.getElementById('iconDisplay');
+
+        if (iconClass && iconClass.trim()) {
+            preview.classList.add('show');
+            display.innerHTML = `<i class="${iconClass}"></i>`;
+        } else {
+            preview.classList.remove('show');
+        }
+    }
+</script>

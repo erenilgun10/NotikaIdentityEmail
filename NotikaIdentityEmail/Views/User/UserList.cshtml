@@ -1,0 +1,243 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model List<AppUser>
+@{
+    ViewData["Title"] = "Kullanıcı Listesi";
+    Layout = "~/Views/UserLayout/Index.cshtml";
+    var count = 0;
+}
+
+<style>
+    .user-table-wrapper {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        margin: 20px 0;
+    }
+
+    .table-header {
+        background: #667eea;
+        color: white;
+        padding: 20px 25px;
+        border-bottom: 3px solid #5568d3;
+    }
+
+        .table-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+    .user-stats {
+        background: #f8f9fa;
+        padding: 15px 25px;
+        border-bottom: 1px solid #e9ecef;
+        font-size: 0.9rem;
+        color: #495057;
+    }
+
+        .user-stats strong {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+    .table-content {
+        padding: 25px;
+    }
+
+    .user-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .user-table thead {
+            background: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+            .user-table thead th {
+                padding: 12px 15px;
+                text-align: left;
+                font-weight: 600;
+                font-size: 0.85rem;
+                color: #495057;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+        .user-table tbody tr {
+            border-bottom: 1px solid #e9ecef;
+            transition: background-color 0.2s ease;
+        }
+
+            .user-table tbody tr:hover {
+                background-color: #f8f9ff;
+            }
+
+            .user-table tbody tr:last-child {
+                border-bottom: none;
+            }
+
+        .user-table tbody td {
+            padding: 15px;
+            color: #212529;
+            font-size: 0.95rem;
+        }
+
+    .row-number {
+        text-align: center;
+        font-weight: 600;
+        color: #667eea;
+        width: 60px;
+    }
+
+    .user-name {
+        font-weight: 500;
+        color: #2d3748;
+    }
+
+    .user-email {
+        color: #6c757d;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 8px;
+        justify-content: flex-start;
+    }
+
+    .btn-action {
+        padding: 6px 12px;
+        border: none;
+        border-radius: 4px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .btn-delete {
+        background-color: #dc3545;
+        color: white;
+    }
+
+        .btn-delete:hover {
+            background-color: #c82333;
+            color: white;
+        }
+
+    .btn-toggle-active {
+        background-color: #28a745;
+        color: white;
+    }
+
+        .btn-toggle-active:hover {
+            background-color: #218838;
+            color: white;
+        }
+
+    .btn-toggle-passive {
+        background-color: #6c757d;
+        color: white;
+    }
+
+        .btn-toggle-passive:hover {
+            background-color: #5a6268;
+            color: white;
+        }
+
+    .status-badge {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .status-active {
+        background-color: #d4edda;
+        color: #155724;
+    }
+
+    .status-passive {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="user-table-wrapper">
+                <div class="table-header">
+                    <h2>👥 Kullanıcı Listesi</h2>
+                </div>
+
+                <div class="user-stats">
+                    <strong>Toplam Kullanıcı:</strong> @Model.Count
+                </div>
+
+                <div class="table-content">
+                    <table class="user-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 60px; text-align: center;">#</th>
+                                <th>Ad Soyad</th>
+                                <th>Kullanıcı Adı</th>
+                                <th>E-posta</th>
+                                <th style="width: 100px;">Durum</th>
+                                <th style="width: 200px;">İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                count++;
+                                <tr>
+                                    <td class="row-number">@count</td>
+                                    <td>
+                                        <span class="user-name">@item.FirstName @item.LastName</span>
+                                    </td>
+                                    <td>@item.UserName</td>
+                                    <td>
+                                        <span class="user-email">@item.Email</span>
+                                    </td>
+                                    <td>
+                                        <span class="status-badge @(item.IsActive ? "status-active" : "status-passive")">
+                                            @(item.IsActive ? "Aktif" : "Pasif")
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <form asp-controller="User" asp-action="UpdateUserIsActive" method="post" style="display: inline;">
+                                                <input type="hidden" name="id" value="@item.Id" />
+                                                <input type="hidden" name="isActive" value="@(!item.IsActive ? "true" : "false")" />
+                                                <button type="submit" class="btn-action @(item.IsActive ? "btn-toggle-passive" : "btn-toggle-active")"
+                                                        onclick="return confirm('@(item.IsActive ? "Kullanıcıyı pasif yapmak istediğinize emin misiniz?" : "Kullanıcıyı aktif yapmak istediğinize emin misiniz?")')">
+                                                    @(item.IsActive ? "🔴 Pasif Yap" : "🟢 Aktif Yap")
+                                                </button>
+                                            </form>
+
+                                            <form asp-controller="User" asp-action="DeleteUser" method="post" style="display: inline;">
+                                                <input type="hidden" name="id" value="@item.Id" />
+                                                <button type="submit" class="btn-action btn-delete"
+                                                        onclick="return confirm('Bu kullanıcıyı silmek istediğinize emin misiniz?')">
+                                                    🗑️ Sil
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
