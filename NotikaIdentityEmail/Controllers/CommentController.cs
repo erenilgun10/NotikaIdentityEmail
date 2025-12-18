@@ -67,7 +67,7 @@ namespace NotikaIdentityEmail.Controllers
         [HttpPost]
         public async Task<IActionResult> DeleteComment(int id)
         {
-            var comment = await context.Comments.FindAsync(id);
+            var comment = await context.Comments.FindAsync(id); 
             if (comment is not null)
             {
                 context.Comments.Remove(comment);
@@ -124,7 +124,6 @@ namespace NotikaIdentityEmail.Controllers
                 };
 
                 using var client = new HttpClient();
-                var apiKey = "";
                 var apiKey = config["HuggingFace:ApiKey"];
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", apiKey);
                 try
